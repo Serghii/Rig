@@ -32,21 +32,119 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.19.0\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.19.0\lib\net45\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.19.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.19.0\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.19.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Sheets.v4, Version=1.19.0.684, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Sheets.v4.1.19.0.684\lib\net45\Google.Apis.Sheets.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenHardwareMonitorLib, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenHardwareMonitor.0.7.1\lib\net40\OpenHardwareMonitorLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telegram.Bot, Version=14.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.14.4.0\lib\net45\Telegram.Bot.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, PublicKeyToken=431cba815f6a8b5b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.Signed.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlarmData.cs" />
+    <Compile Include="Extention\RigEx.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\AttributesReaderBaseCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSAlarmLineCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSBotIdCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSCoinCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSMinerLineCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSPingNotifyCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSsheetIdCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSStopMinerCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSUserTokenCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSVersionCmd.cs" />
+    <Compile Include="GSheet\ComandType.cs" />
+    <Compile Include="GSheet\Command\BaseComand.cs" />
+    <Compile Include="GSheet\Command\CloseCommand.cs" />
+    <Compile Include="GSheet\Command\CPUComand.cs" />
+    <Compile Include="GSheet\Command\ISendComand.cs" />
+    <Compile Include="GSheet\Command\MessageComand.cs" />
+    <Compile Include="GSheet\Command\PingComand.cs" />
+    <Compile Include="GSheet\Command\RestartCommand.cs" />
+    <Compile Include="GSheet\Command\SendComand.cs" />
+    <Compile Include="GSheet\Command\WakeUpCommand.cs" />
+    <Compile Include="GSheet\GSheet.cs" />
+    <Compile Include="GSheet\GShSettings.cs" />
+    <Compile Include="GSheet\LastIdComand.cs" />
+    <Compile Include="GSheet\MinerInfo.cs" />
+    <Compile Include="GSheet\MyPage.cs" />
+    <Compile Include="GSheet\ServerInfo.cs" />
+    <Compile Include="MainClass.cs" />
+    <Compile Include="Miner\Coin.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Miner\MineDifficulty.cs" />
+    <Compile Include="Miner\Miner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SensorService.cs" />
+    <Compile Include="SettingsData.cs" />
+    <Compile Include="Telegram\Bot.cs" />
+    <Compile Include="Telegram\JsonData.cs" />
+    <Compile Include="Telegram\TeleCommand\ChangeMinerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\IgnorAlarmTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\IgnorPingTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\ITCommand.cs" />
+    <Compile Include="Telegram\TeleCommand\LounchMinerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\MainKeyboardKeyTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\MainKeyboardKTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\MinerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\PCMenuTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\RestartTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\RunAllTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\ScreenTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\ShowDifficultyTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\StopAlarmTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\StopAllPingTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\StopMinerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\StopPingServerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\TCommandBase.cs" />
+    <Compile Include="Telegram\TeleCommand\UpdateTCmd.cs" />
+    <Compile Include="Telegram\TelegramBot.cs" />
+    <Compile Include="Telegram\TeleSettings.cs" />
+    <Compile Include="XmrHrate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
