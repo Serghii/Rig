@@ -197,6 +197,9 @@ namespace Rig
         private void CreateSheets()
         {
             var Firstline = GetRange("bios!1:1");
+            if (Firstline == null || !Firstline.Any())
+                return;
+
             int newVersion;
             if (!int.TryParse( Firstline[0][2].ToString(),out newVersion))
             {
