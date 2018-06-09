@@ -4,6 +4,10 @@ using Rig.Telegram;
 
 namespace Rig
 {
+    public interface IMinerslist
+    {
+        List<MinerInfo> MinersList { get; }
+    }
     public interface IGsheetData
     {
         List<AlarmSettings> AlarmSettingsList { get; }
@@ -11,7 +15,7 @@ namespace Rig
         List<AlarmSettings> StopSettingsList { get; }
         List<ServerInfo> UserToKen { get; }
         List<ServerInfo> ServersSheetId { get; }
-        List<MinerInfo> MinersList { get; }
+       // List<MinerInfo> MinersList { get; }
         string BotId { get; set; }
         MyPage MyPage { get; set; }
         int PingDelayMillisec { get; set; }
@@ -30,7 +34,7 @@ namespace Rig
         ISensors GetSensors { get; }
     }
 
-    public interface ISettings: IAlarmData, IGsheetData, IDifficulty
+    public interface ISettings: IAlarmData, IGsheetData, IDifficulty, IMinerslist
     {
         event Action MinerActivityChange;
         bool MinerStatus { get; set; }

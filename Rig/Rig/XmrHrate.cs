@@ -27,7 +27,7 @@ public class XmrHrate
                 }
                 catch (Exception e)
                 {
-                    RigEx.WriteLineColors($"XMR get Hash rate Error: {e.Message}".AddTimeStamp(),ConsoleColor.DarkRed);
+                    RigEx.WriteLineColors($"XMR {e.Message}".AddTimeStamp(),ConsoleColor.DarkGray);
                     return -1;
                 }
             }

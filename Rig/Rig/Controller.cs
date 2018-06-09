@@ -83,10 +83,14 @@ namespace Rig
     {
         event Action UpdateDataAction;
         //TimeSpan AlarmDelay { get; set; }
-        bool VersionIsLiquid(int curVersion, int newversion);
+        //bool VersionIsLiquid(int curVersion, int newversion);
         int PingDelayMillisec { get; set; }
     }
 
+    public interface ICtrlMinerList
+    {
+        
+    }
     public interface IGetDifficulty
     {
         Func<Dictionary<string, double>> GetDiffucalty { get;}
@@ -97,7 +101,7 @@ namespace Rig
         Func<Dictionary<string, double>> GetDiffucalty { get; set; }
         IEnumerable<ICoin> GetCoins { get;}
     }
-    public class Controller : ITelegramCtrl, IMiningCtrl, ICtrlAlarm, ICtrlSheet, IDifficultyCtrl, ICtrlSensorServise
+    public class Controller : ITelegramCtrl, IMiningCtrl, ICtrlAlarm, ICtrlSheet, IDifficultyCtrl, IMinerslist
     {
         public static readonly string ScreenPath =
             string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Screenshot.png");
@@ -113,16 +117,16 @@ namespace Rig
         
         public Func<Dictionary<string, double>> getDiffucalty;
 
-        public bool VersionIsLiquid(int curVersion, int newversion)
-        {
-            if (newversion > curVersion)
-            {
-                RigEx.WriteLineColors($"start Update Version curent: {curVersion} to last version: {newversion}", ConsoleColor.Green);
-                RunLauncher();
-                return false;
-            }
-            return true;
-        }
+//        public bool VersionIsLiquid(int curVersion, int newversion)
+//        {
+//            if (newversion > curVersion)
+//            {
+//                RigEx.WriteLineColors($"start Update Version curent: {curVersion} to last version: {newversion}", ConsoleColor.Green);
+//                RunApplication();
+//                return false;
+//            }
+//            return true;
+//        }
 
         public int PingDelayMillisec
         {
@@ -260,7 +264,7 @@ namespace Rig
         public void RestartButton()
         {
             RigEx.WriteLineColors("QUIT".AddTimeStamp(),ConsoleColor.Yellow);
-            RunLauncher();
+            RunApplication();
             RigEx.QuitApp(500);
         }
 
@@ -362,22 +366,22 @@ namespace Rig
             set => data.MinerStatus = value;
         }
 
-        private void RunLauncher()
+        private void RunApplication()
         {
             try
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.CreateNoWindow = true;
                 startInfo.UseShellExecute = true;
-                startInfo.FileName = RigEx.Path + @"RigLauncher.exe";
+                startInfo.FileName = RigEx.PathFull;
                 startInfo.WindowStyle = ProcessWindowStyle.Normal;
 
-                RigEx.WriteLineColors($"Run RigLauncher: {startInfo.FileName}".AddTimeStamp(), ConsoleColor.DarkCyan);
+                RigEx.WriteLineColors($"Run Application: {startInfo.FileName}".AddTimeStamp(), ConsoleColor.DarkCyan);
                 Process.Start(startInfo);
             }
             catch (Exception e)
             {
-                RigEx.WriteLineColors($"Run Launcher Error: {e.Message}", ConsoleColor.Red);
+                RigEx.WriteLineColors($"Run Application Error: {e.Message}", ConsoleColor.Red);
             }
         }
     }

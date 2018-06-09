@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -9,14 +10,17 @@ using File = System.IO.File;
 
 public static class RigEx
 {
-    private static  readonly string path = System.IO.Path.GetFullPath(System.IO.Path.Combine(Assembly.GetEntryAssembly().Location, @"..\..\"));
+    private static  readonly string fullpath = System.IO.Path.GetFullPath(Assembly.GetEntryAssembly().Location);
+    private static  readonly string mainFolderPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(fullpath, @"..\..\"));
     public static readonly string Lastminer = "lastMiner.txt";
+    public static readonly Version MyVersion = Assembly.GetEntryAssembly().GetName().Version;
     public static string AddTimeStamp(this string s)
     {
-        return $"[ {DateTime.Now:HH:mm:ss tt}] : {s}";
+        return $"[{DateTime.Now:MM_dd HH:mm:ss tt}] : {s}";
     }
 
-    public static string Path => path;
+    public static string MainFolderPath => mainFolderPath;
+    public static string PathFull => fullpath;
 
     public static void WriteLineColors(string msg, ConsoleColor color)
     {
@@ -67,24 +71,43 @@ public static class RigEx
         }
         list.Add(obj);
     }
-
     public static void SafeLastMiner(string minerName)
     {
         Safe(minerName,Lastminer);
     }
     public static void Safe(string msg, string fileName, string path = null)
     {
-        var Path = System.IO.Path.Combine((path ?? RigEx.Path) , fileName);
+        var Path = System.IO.Path.Combine((path ?? RigEx.MainFolderPath) , fileName);
              File.WriteAllText(Path, msg, Encoding.UTF8);
     }
     public static string Read(string fileName, string path = null)
     {
-        var Path = System.IO.Path.Combine((path ?? RigEx.Path) , fileName);
+        var Path = System.IO.Path.Combine((path ?? RigEx.MainFolderPath) , fileName);
         if (File.Exists(Path))
             return File.ReadAllText(Path);
         return String.Empty;
     }
 
+    public static void KillMiners()
+    {
+        var processes = Process.GetProcesses().Where(i => i.ProcessName.StartsWith("Nice")
+                                      || i.ProcessName.StartsWith("excavator")
+                                      || i.ProcessName.StartsWith("ccminer")
+                                      || i.ProcessName.StartsWith("ethminer")
+                                      || i.ProcessName.StartsWith("nheqminer")
+                                      || i.ProcessName.StartsWith("sgminer")
+                                      || i.ProcessName.StartsWith("xmrig")
+                                      || i.ProcessName.StartsWith("xmr")).ToList();
+        if (processes != null)
+        {
+            for (int i = 0; i < processes.Count(); i++)
+            {
+                processes[i].CloseMainWindow();
+                processes[i].Kill();
+            }
+        }
+        Console.WriteLine(processes?.Count);
+    }
     
     public static void QuitApp(int delayMillisecond)
     {

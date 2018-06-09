@@ -31,23 +31,24 @@ namespace Rig
         private BatchGetValuesResponse response;
         private IAttributesReader[] AttributesReaderCommands;
 
-        private ISendComand Ping; 
-        private ISendComand WaikeUp; 
-        private ISendComand Restart; 
-        private ISendComand Clouse; 
-        private ISendComand CPU; 
+        private ISendComand Ping;
+        private ISendComand WaikeUp;
+        private ISendComand Restart;
+        private ISendComand Clouse;
+        private ISendComand CPU;
         private ISendComand Message;
 
         private SendComand sendLastIdLine ;
         LastIdComand lastIdLine = new LastIdComand();
         public MyPage MyPage => data.MyPage;
+
         public ICtrlSheet Data => data;
         public int LastIdComand
         {
-            get { return lastIdLine.lineId; }
+            get { return lastIdLine.lineId ; }
             set
             {
-                lastIdLine.lineId = value;
+                lastIdLine.lineId = value < 1000 ? value: 3;
                 sendLastIdLine.Send(lastIdLine.lineId.ToString());
             }
         }
@@ -72,10 +73,10 @@ namespace Rig
             data.UpdateDataAction += OnUpdateDataAction;
             data.MinerActivityAction += OnMinerActivityAction;
             data.AlarmAction += OnAlarmAction;
-            Console.WriteLine("Telegram token:");
+            Console.Write("token: ");
             data.UserToKen.ForEach(i=> RigEx.WriteLineColors($"{i.Name} - {i.Id}",ConsoleColor.DarkCyan));
-            RigEx.WriteLineColors($"my name {data.MyPage.MyServerSheetId.Name} ",ConsoleColor.Yellow);
-            Console.WriteLine("\nOther Rigs:");
+            RigEx.WriteLineColors($"my name: {data.MyPage.MyServerSheetId.Name} ",ConsoleColor.Yellow);
+            Console.WriteLine("\nOther:");
             if (!data.ServersSheetId.Any())
             {
                 Console.WriteLine("other ServSheetId == null");
@@ -112,11 +113,10 @@ namespace Rig
                 new GSUserTokenCmd(this),
                 new GSsheetIdCmd(this),
                 new GSPingNotifyCmd(this),
-                new GSMinerLineCmd(this),
+               // new GSMinerLineCmd(this),
                 new GSAlarmLineCmd(this),
                 new GSStopMinerCmd(this),
                 new GSBotIdCmd(this), 
-                new GSVersionCmd(this), 
             };
         }
 
@@ -125,7 +125,6 @@ namespace Rig
             data.UserToKen.Clear();
             data.AlarmSettingsList.Clear();
             data.StopSettingsList.Clear();
-            data.MinersList.Clear();
             data.ServersSheetId.Clear();
             CreateSheets();
         }
@@ -265,7 +264,9 @@ namespace Rig
                     }
                 }
             }
-            return result < 3 ? 3 : result;
+            result = Math.Max(3, result);
+            result = result < 1000 ? result : 3;
+            return result;
         }
 
         private bool CheckStatus(IList<object> comandLine)
@@ -278,9 +279,13 @@ namespace Rig
         {
             var serverPing = Convert.ToDateTime(comandLine[GShSettings.ping.LaterToColum()]);
             //var diferent = DateTime.Today.Add(DateTime.Now - serverPing);
+            var t = DateTime.Now;
             TimeSpan diferents = DateTime.Now - serverPing;
             Console.Write($"ping: [ {diferents:hh\\:mm\\:ss} ] ".AddTimeStamp());
-            return data.PingDelayMillisec > Math.Abs(diferents.TotalMilliseconds);
+            var maxDiferent = 86400000 - data.PingDelayMillisec; // 24 Hours == 86,400,000 ms
+            var min = data.PingDelayMillisec > Math.Abs(diferents.TotalMilliseconds);
+            var max = maxDiferent > Math.Abs(diferents.TotalMilliseconds);
+            return !max || min;
             //return diferent.Hour < 1 && data.MyPage.AlarmDelay > diferent;
         }
 

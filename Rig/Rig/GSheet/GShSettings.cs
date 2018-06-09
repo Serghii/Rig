@@ -6,7 +6,6 @@ public static class GShSettings
         public static readonly string SpreadsheetId = GetSpreadsheetId();
         public static readonly string UserTokenLine = "token";
         public static readonly string sheetId = "sheetid";
-        public static readonly string version = "version";
         public static readonly string minerLine = "miner";
         public static readonly string alarmLine = "alarm";
         public static readonly string stopMiner = "stop";

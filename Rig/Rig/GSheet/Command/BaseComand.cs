@@ -47,7 +47,7 @@ namespace Rig
 
             request = new List<Request>
                         {
-                            GetRequest(row, 0, $"{DateTime.Now:HH:mm:ss tt}"),
+                            GetRequest(row, 0, String.Empty.AddTimeStamp()),
                             GetRequest(row, 1, type)
                         };
         }
@@ -56,7 +56,7 @@ namespace Rig
 
             request = new List<Request>
                         {
-                            GetRequest(row, 0, $"{DateTime.Now:HH:mm:ss tt}"),
+                            GetRequest(row, 0, String.Empty.AddTimeStamp()),
                             GetRequest(row, 1, type),
                             GetRequest(row, 2, message)
                         };

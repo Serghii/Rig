@@ -12,6 +12,6 @@ class GSMinerLineCmd : AttributesReaderBaseCmd
     {
         if (line[1] == null || line[1].ToString() == string.Empty)
             RigEx.WriteLineColors("Google Sheet cannot read miner name from  B".AddTimeStamp(), ConsoleColor.Red);
-        gSheet.Data.MinersList.Add(new MinerInfo(line[1].ToString(), line[2].ToString()));
+        //gSheet.Data.MinersList.Add(new MinerInfo(line[1].ToString(), line[2].ToString()));
     }
 }

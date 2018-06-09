@@ -112,7 +112,8 @@ namespace Rig.Telegram
                 else
                 {
                     lowAlarmCoutner++;
-                    RigEx.WriteLineColors(
+                    if (lowAlarmCoutner > 1)
+                        RigEx.WriteLineColors(
                         $"Alarm => [{lowAlarmCoutner}/{LowAlarmMax} / {ctrl.GetAlarmSettings.Count()}] cooldown: 15sec\tsensor: [ {sensor.Name} ] => [ {sensorsType} ]: [ {sensor.Dictionary[sensorsType]} ] - [ low ]"
                             .AddTimeStamp(), ConsoleColor.DarkMagenta);
                 }

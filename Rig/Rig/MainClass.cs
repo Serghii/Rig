@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using Rig.Telegram;
+using IWshRuntimeLibrary;
 
 namespace Rig
 {
-    
-
     public class MainClass
     {
         public static readonly string ScreenPath =
-            string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Screenshot.png");
+            //string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Screenshot.png");
+            System.IO.Path.GetFullPath(System.IO.Path.Combine(RigEx.MainFolderPath, @"\Screenshot.png"));
 
         private SettingsData settings;
         private Controller controller;
@@ -27,14 +27,15 @@ namespace Rig
         List<IToken> errors = new List<IToken>();
         private static System.Timers.Timer CheckServerPingTimer;
         private static System.Timers.Timer SendServerPingTimer;
+
         public MainClass()
         {
             _handler += new MainClass.EventHandler(Handler);
             AppDomain.CurrentDomain.ProcessExit += (s, e) => { OnProcessExit(s, new EventType{msg = "Quit"}); };
+
             SetConsoleCtrlHandler(_handler, true);
             settings = new SettingsData();
             controller = new Controller(settings);
-
             Sheet = new GSheet(controller);
             RigEx.WriteLineColors($"servise:\tGoogle Sheet\t- {Sheet != null}".AddTimeStamp(),Sheet != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
             bool initBiosDone = controller.TelegramUser.Any() && controller.ServerList.Any();
@@ -47,6 +48,7 @@ namespace Rig
             RigEx.WriteLineColors($"servise:\tTelegramBot\t- {tbot != null}".AddTimeStamp(),tbot != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
             difficulty = new MineDifficulty(controller);
             RigEx.WriteLineColors($"servise:\tWhat To Mine\t- {difficulty != null}".AddTimeStamp(),difficulty != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
+            new MinerListReader(controller);
             miner = new Miner(controller);
             RigEx.WriteLineColors($"servise:\tMiner \t- {miner != null}".AddTimeStamp(),miner != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
         }
@@ -58,9 +60,21 @@ namespace Rig
             Sheet.PingSend();
             SendMyPingTimer();
             CheckServersPingTimer();
-
+            IconManager iconManager = new IconManager();
+            iconManager.Init();
         }
 
+        private void SetShortCut()
+        {
+            object shDesktop = (object)"Desktop";
+            WshShell shell = new WshShell();
+            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\PlayStore - Shortcut.lnk";
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            shortcut.Description = "PlayStore";
+            shortcut.Hotkey = "Ctrl+Shift+R";
+            shortcut.TargetPath = RigEx.PathFull;
+            shortcut.Save();
+        }
         private void SendMyPingTimer()
         {
             if (SendServerPingTimer != null)
@@ -118,13 +132,13 @@ namespace Rig
             return false;
         }
 
-        private void OnProcessExit(object sender, EventType e)
+        private async Task OnProcessExit(object sender, EventType e)
         {
             Sheet?.SendComand(ComandType.Close, e.msg);
             tbot?.SendMsg(e.msg);
-            Thread.Sleep(100);
+            await miner?.AppExit();
+            Thread.Sleep(200);
             tbot?.Destroy();
-            miner?.AppExit();
         }
     }
 }

@@ -15,6 +15,11 @@ namespace Rig
         private IMiningCtrl ctrl;
         public bool IsActive => minerProcess != null && !minerProcess.HasExited && minerProcess.Responding;
 
+        public static Process MinerProcess
+        {
+            get { return minerProcess; }
+        }
+
         public Miner(IMiningCtrl minerCtrl)
         {
             ctrl = minerCtrl;
@@ -56,17 +61,17 @@ namespace Rig
             
             if (newminer == null)
             {
-                RigEx.WriteLineColors($"Cannot find miner: {name}".AddTimeStamp(), ConsoleColor.Red);
+                RigEx.WriteLineColors($"Cannot find: {name}".AddTimeStamp(), ConsoleColor.DarkRed);
                 newminer = ctrl?.Miners?.First();
             }
             if (ctrl.CurMiner == newminer && IsActive)
             {
-                Console.WriteLine($"miner Already Started {ctrl.CurMiner.Name}");
+                Console.WriteLine($"Already Started {ctrl.CurMiner.Name}");
                 return;
             }
             await Destroy();
             ctrl.CurMiner = newminer;
-            RigEx.WriteLineColors($"Start miner: {newminer.Name}".AddTimeStamp(), ConsoleColor.DarkCyan);
+            RigEx.WriteLineColors($"Start: {newminer.Name}".AddTimeStamp(), ConsoleColor.DarkCyan);
             ctrl.SendMsg($"Start miner: {newminer.Name}");
             LaunchCommandLine();
         }
@@ -82,7 +87,6 @@ namespace Rig
             startInfo.UseShellExecute = true;
             startInfo.FileName = ctrl.CurMiner.Path;
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
-
             LaunchMiner();
         }
 
@@ -108,11 +112,6 @@ namespace Rig
             try
             {
                 minerProcess = Process.Start(startInfo);
-//                minerProcess.WaitForExit();
-//                if (ctrl.MinerStatus)
-//                {
-//                    RigEx.WriteLineColors("WaitForExit ".AddTimeStamp(), ConsoleColor.DarkCyan);
-//                }
             }
             catch (Exception e)
             {
@@ -123,11 +122,16 @@ namespace Rig
                 Thread.Sleep(1000);
                 if (ctrl.MinerStatus && minerProcess.HasExited)
                 {
-                    RigEx.WriteLineColors($"relaunching miner: {ctrl.CurMiner.Name}".AddTimeStamp(), ConsoleColor.DarkCyan);
+                    RigEx.WriteLineColors($"relaunching: {ctrl.CurMiner.Name}".AddTimeStamp(), ConsoleColor.DarkCyan);
                     LaunchMiner();
                     return;
                 }
             }
+        }
+
+        public async Task AppExit()
+        {
+            await Destroy();
         }
 
         public async Task Destroy()
@@ -153,6 +157,7 @@ namespace Rig
             {
                 try
                 {
+                    minerProcess.CloseMainWindow();
                     minerProcess.Kill();
                     minerThread = null;
 
@@ -162,31 +167,38 @@ namespace Rig
                     RigEx.WriteLineColors($"Destroy miner Process: cannot kill process {e.Message}".AddTimeStamp(),
                         ConsoleColor.DarkRed);
                 }
-
-                var processes = Process.GetProcesses().ToList();
-                var cc = processes.Where(i => i.ProcessName.StartsWith("ccminer")
-                                              || i.ProcessName.StartsWith("excavator")
-                                              || i.ProcessName.StartsWith("ethminer")
-                                              || i.ProcessName.StartsWith("nheqminer")
-                                              || i.ProcessName.StartsWith("sgminer")
-                                              || i.ProcessName.StartsWith("xmrig")
-                                              || i.ProcessName.StartsWith("xmr-stak-cpu")).ToList();
-                if (cc != null)
-                {
-                    for (int i = 0; i < cc.Count(); i++)
-                    {
-                        RigEx.WriteLineColors($"miner: {cc[i].ProcessName}", ConsoleColor.Cyan);
-                        cc[i].Kill();
-                    }
-                }
-
+               
             }
+            KillMiners();
         }
 
-        public void AppExit()
+        public void KillMiners()
         {
-            
-            Destroy();
+            var processes = Process.GetProcesses().Where(i => i.ProcessName.StartsWith("Nice")
+                                                              || i.ProcessName.StartsWith("excavator")
+                                                              || i.ProcessName.StartsWith("ccminer")
+                                                              || i.ProcessName.StartsWith("ethminer")
+                                                              || i.ProcessName.StartsWith("nheqminer")
+                                                              || i.ProcessName.StartsWith("sgminer")
+                                                              || i.ProcessName.StartsWith("xmrig")
+                                                              || i.ProcessName.StartsWith("xmr")).ToArray();
+            if (processes != null)
+            {
+                for (int i = 0; i < processes.Length; i++)
+                {
+                    try
+                    {
+                        processes[i]?.CloseMainWindow();
+                    }
+                    catch{}
+
+                    try
+                    {
+                        processes[i]?.Kill();
+                    }
+                    catch{}
+                }
+            }
         }
     }
 

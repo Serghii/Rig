@@ -185,7 +185,8 @@ namespace Rig
                 {
                     if (sensor.Name == "CPU Total")
                         newCPULoad = sensor.Value.Value;
-                    else if (sensor.SensorType == SensorType.Temperature)
+
+                    if (newCPULoad > 0 && sensor.SensorType == SensorType.Temperature)
                     {
                         ctrl.GetSensors.Add(sensor.Hardware.Identifier.ToString(), HWType.cpu, SensorsType.CpuTemperature, sensor.Value.Value);
                         ctrl.GetSensors.Add(sensor.Hardware.Identifier.ToString(), HWType.cpu, SensorsType.CpuLoad, newCPULoad);
