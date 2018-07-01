@@ -10,12 +10,12 @@ namespace Rig.Telegram
         none = 0,
         miner = 1,
         screen = 2,
-        restart = 3,
+        restartMiner = 3,
         restartconfirm = 4,
         stopPing = 5,
         stopAllPing = 6,
         startAllPings = 7,
-        showDifficulty =8,
+        showRates =8,
         startMining = 9,
         stopMining = 10,
         changeMiner = 11,
@@ -27,9 +27,16 @@ namespace Rig.Telegram
         runAll = 18,
         pcmenu = 19,
         lounchMiner = 21,
+        pcRestart = 22,
+        pcShutdown = 23,
+        pc = 24,
+        temperature
     }
     public static class Icons
     {
+        public static readonly string nalik = "💰";
+        public static readonly string bitok = "🅱️";
+        public static readonly string kyrs = "💲";
         public static readonly string cpuL= "⚡️";
         public static readonly string cpuT= "CPU    🌡";
         public static readonly string gpuT= "Video 🌡";
@@ -43,6 +50,7 @@ namespace Rig.Telegram
         public static readonly string clock = "⏰";
         public static readonly string RedPoint = "🔴";
         public static readonly string GreenOk = "✅";
+        public static readonly string temperature = "🌡";
 
         public static string ValueIcon(this SensorsType type)
         {
@@ -108,24 +116,33 @@ namespace Rig.Telegram
         public static readonly string key = "key";
         public static readonly string k = "k";
 
-        public static readonly string Miner = "miner";
-        public static readonly string info2 = "🌎 info ";
-        public static readonly string restart = "🔄 restart ";
+        public static readonly string miner = "miner";
+        public static readonly string rates = "💹 rates ";
+        public static readonly string pcrestart = "🔄 pc restart";
+        public static readonly string pcshutdown = "👀 pc shutdown ";
+        public static readonly string restartMiner = "🔄 restart miner ";
         public static readonly string screen = "🖥 screen ";
-        public static readonly string difficulty = "💹 difficulty";
-        public static readonly string startMining = "✅ Start miner";
-        public static readonly string stopMining = $"{Icons.RedPoint} Stop miner";
-        public static readonly string ignoreAlarm = "🔇 Ignore";
+        public static readonly string infopc = "🖥 pc";
+        public static readonly string startMining = "✅ start miner";
+        public static readonly string stopMining = $"{Icons.RedPoint} stop miner";
+        public static readonly string ignoreAlarm = "🔇 ignore";
         public static readonly string update = "📝 update data";
         public static readonly string runAll = "🚀 run All";
         public static readonly string stopAlarm = "🔕 stop alarm";
         public static readonly string changeMiner = "change miner";
+        public static readonly string temperature = "show 🌡";
 
 
         private static Dictionary<TCmdType, string> commandToString = new Dictionary<TCmdType, string>()
         {
-            {TCmdType.miner, TeleSettings.Miner}, {TCmdType.screen, TeleSettings.screen}, {TCmdType.restart, TeleSettings.restart}, {TCmdType.restartconfirm, ""},
-            {TCmdType.stopAllPing, TeleSettings.stopsAllPing}, {TCmdType.startAllPings, TeleSettings.starAllPing}, {TCmdType.showDifficulty, TeleSettings.difficulty}, {TCmdType.startMining, TeleSettings.startMining}, {TCmdType.stopMining, TeleSettings.stopMining}, {TCmdType.changeMiner, ""}, {TCmdType.AlarmIgnor, TeleSettings.ignoreAlarm}, {TCmdType.StopAlarm, TeleSettings.stopAlarm}, {TCmdType.UpdateGSheet, TeleSettings.update}, {TCmdType.turnOnAll, TeleSettings.runAll}
+            {TCmdType.miner, TeleSettings.miner}, {TCmdType.screen, TeleSettings.screen}, {TCmdType.restartMiner, TeleSettings.restartMiner},
+            { TCmdType.restartconfirm, ""},
+            {TCmdType.stopAllPing, TeleSettings.stopsAllPing}, {TCmdType.startAllPings, TeleSettings.starAllPing},
+            { TCmdType.showRates, TeleSettings.rates}, {TCmdType.startMining, TeleSettings.startMining},
+            { TCmdType.stopMining, TeleSettings.stopMining}, {TCmdType.changeMiner, ""},
+            { TCmdType.AlarmIgnor, TeleSettings.ignoreAlarm}, {TCmdType.StopAlarm, TeleSettings.stopAlarm},
+            { TCmdType.UpdateGSheet, TeleSettings.update}, {TCmdType.turnOnAll, TeleSettings.runAll},
+            { TCmdType.temperature,TeleSettings.temperature}
         };
 
         public static string ToCommandString(this TCmdType c)

@@ -16,6 +16,7 @@ public static class GShSettings
         public static readonly string AppName = "forrig";
         public static readonly string PingNotify = "pingnotify";
         public static readonly string CoinName = "coinname";
+        public static readonly string MsiAfterburner = "msiafterburner";
         public static readonly string botId = "botid";
 
         public static readonly string PCname = Environment.MachineName.ToLower();

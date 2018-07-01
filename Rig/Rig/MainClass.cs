@@ -22,6 +22,7 @@ namespace Rig
         private TelegramBot tbot;
         private SensorService sensors;
         private AlarmData alarmSensors;
+        private MSIAfter msi;
         private Miner miner;
         private MineDifficulty difficulty;
         List<IToken> errors = new List<IToken>();
@@ -39,11 +40,12 @@ namespace Rig
             Sheet = new GSheet(controller);
             RigEx.WriteLineColors($"servise:\tGoogle Sheet\t- {Sheet != null}".AddTimeStamp(),Sheet != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
             bool initBiosDone = controller.TelegramUser.Any() && controller.ServerList.Any();
-            RigEx.WriteLineColors($"servise:\tGoogle Reader\t- {initBiosDone}".AddTimeStamp(),initBiosDone ? ConsoleColor.DarkGreen : ConsoleColor.Red);
+            RigEx.WriteLineColors($"servise:\tGoogle GetShortCutPath\t- {initBiosDone}".AddTimeStamp(),initBiosDone ? ConsoleColor.DarkGreen : ConsoleColor.Red);
             sensors = new SensorService(controller);
             RigEx.WriteLineColors($"servise:\tSensors\t\t- {sensors != null}".AddTimeStamp(), sensors != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
             alarmSensors = new AlarmData(controller);
             RigEx.WriteLineColors($"servise:\tAlarmSensors\t- {alarmSensors != null}".AddTimeStamp(), alarmSensors != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
+            msi = new MSIAfter(controller);
             tbot = new TelegramBot(controller);
             RigEx.WriteLineColors($"servise:\tTelegramBot\t- {tbot != null}".AddTimeStamp(),tbot != null ? ConsoleColor.DarkGreen : ConsoleColor.Red);
             difficulty = new MineDifficulty(controller);

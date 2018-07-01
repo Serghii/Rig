@@ -18,6 +18,7 @@ namespace Rig.Telegram
         ReplyKeyboardMarkup Markup { get; }
         KeyboardButton[][] HomeKeyButton { get; }
         InlineKeyboardMarkup HomeInlinekeyBoard { get; }
+        InlineKeyboardMarkup PcInlinekeyBoard { get; }
         InlineKeyboardMarkup GetMinersInlinekeyBoard();
         void InitHomeKeybord();
         void SendMsg(string msg);
@@ -30,6 +31,7 @@ namespace Rig.Telegram
         private float CriticalCPULoad = 20;
         public KeyboardButton[][] HomeKeyButton { get; set; }
         public InlineKeyboardMarkup HomeInlinekeyBoard { get; set; }
+        public InlineKeyboardMarkup PcInlinekeyBoard { get; set; }
         private  ITCommand[] commands ;
         
          
@@ -45,6 +47,7 @@ namespace Rig.Telegram
             InitCommands();
             InitHomeKeybord();
             InitHomeInlinekeyBoard();
+            InitInfoInlinekeyBoard();
 
             if (Bot.Client != null) Bot.Client.OnMessage += OnMessage;
             if (Bot.Client != null) Bot.Client.OnCallbackQuery += OnCallbackQuery;
@@ -54,7 +57,7 @@ namespace Rig.Telegram
 
         private void OnMinerActivityAction()
         {
-            SendMsg($"{TeleSettings.Miner}Miner {CurMiner.Name} activity: {Ctrl.MinerStatus}");
+            SendMsg($"{TeleSettings.miner}miner {CurMiner.Name} activity: {Ctrl.MinerStatus}");
         }
 
         private void InitCommands()
@@ -70,13 +73,17 @@ namespace Rig.Telegram
                 new RunAllTCmd(this),
                 new PCMenuTCmd(this),
                 new ScreenTCmd(this),
-                new RestartTCmd(this),
+                new RestartMinerTCmd(this),
                 new IgnorPingTCmd(this),
                 new IgnorAlarmTCmd(this),
-                new ShowDifficultyTCmd(this),
+                new ShowRatesTCmd(this),
                 new LounchMinerTCmd(this),
                 new ChangeMinerTCmd(this),
-                new StopMinerTCmd(this)
+                new StopMinerTCmd(this),
+                new PcInfoTCmd(this), 
+                new ShowTemperatureTCmd(this),
+                new PcShutDownTCmd(this),
+                new PcRestartTCmd(this), 
             };
         }
         
@@ -204,23 +211,50 @@ namespace Rig.Telegram
             }
         }
 
+        #region PC Inline Keyboard
         private void InitHomeInlinekeyBoard()
         {
-            InlineKeyboardButton[][] keyboardButtons = new InlineKeyboardButton[3][];
-            keyboardButtons[0] = new InlineKeyboardButton[2];
-            keyboardButtons[0][0] = new InlineKeyboardButton { Text = $"{Icons.miner} {TCmdType.miner.ToCommandString()}", CallbackData = JsonData.Serialize(TCmdType.miner)};
-            keyboardButtons[0][1] = new InlineKeyboardButton { Text = TCmdType.showDifficulty.ToCommandString(), CallbackData = JsonData.Serialize(TCmdType.showDifficulty)};
+            InlineKeyboardButton[][] keyboardButtons = new InlineKeyboardButton[2][];
+            keyboardButtons[0] = new InlineKeyboardButton[3];
+            keyboardButtons[0][0] = new InlineKeyboardButton { Text = TeleSettings.stopMining, CallbackData = JsonData.Serialize(TCmdType.stopMining) };
+            keyboardButtons[0][1] = new InlineKeyboardButton { Text = TeleSettings.restartMiner, CallbackData = JsonData.Serialize(TCmdType.restartMiner) };
+            keyboardButtons[0][2] = new InlineKeyboardButton { Text = TeleSettings.startMining, CallbackData = JsonData.Serialize(TCmdType.lounchMiner) };
 
-            keyboardButtons[1] = new InlineKeyboardButton[2];
-            keyboardButtons[1][0] = new InlineKeyboardButton { Text = TeleSettings.restart, CallbackData = JsonData.Serialize(TCmdType.restart) };
-            keyboardButtons[1][1] = new InlineKeyboardButton { Text = TeleSettings.screen, CallbackData = JsonData.Serialize(TCmdType.screen) };
 
-            keyboardButtons[2] = new InlineKeyboardButton[2];
-            keyboardButtons[2][0] = new InlineKeyboardButton { Text = TeleSettings.stopMining, CallbackData = JsonData.Serialize(TCmdType.stopMining) };
-            keyboardButtons[2][1] = new InlineKeyboardButton { Text = TeleSettings.startMining, CallbackData = JsonData.Serialize(TCmdType.lounchMiner) };
+            keyboardButtons[1] = new InlineKeyboardButton[3];
+            keyboardButtons[1][0] = new InlineKeyboardButton { Text = TeleSettings.infopc, CallbackData = JsonData.Serialize(TCmdType.pc) };
+            keyboardButtons[1][1] = new InlineKeyboardButton { Text = $"{Icons.miner} {TCmdType.miner.ToCommandString()}", CallbackData = JsonData.Serialize(TCmdType.miner)};
+            keyboardButtons[1][2] = new InlineKeyboardButton { Text = TCmdType.showRates.ToCommandString(), CallbackData = JsonData.Serialize(TCmdType.showRates)};
+
+//          InlineKeyboardButton[][] keyboardButtons = new InlineKeyboardButton[3][];
+//            keyboardButtons[2] = new InlineKeyboardButton[2];
+//            keyboardButtons[2][0] = new InlineKeyboardButton { Text = TeleSettings.stopMining, CallbackData = JsonData.Serialize(TCmdType.stopMining) };
+//            keyboardButtons[2][1] = new InlineKeyboardButton { Text = TeleSettings.startMining, CallbackData = JsonData.Serialize(TCmdType.lounchMiner) };
+//
+//            keyboardButtons[0] = new InlineKeyboardButton[2];
+//            keyboardButtons[0][0] = new InlineKeyboardButton { Text = $"{Icons.miner} {TCmdType.miner.ToCommandString()}", CallbackData = JsonData.Serialize(TCmdType.miner)};
+//            keyboardButtons[0][1] = new InlineKeyboardButton { Text = TCmdType.showRates.ToCommandString(), CallbackData = JsonData.Serialize(TCmdType.showRates)};
+//
+//            keyboardButtons[1] = new InlineKeyboardButton[2];
+//            keyboardButtons[1][0] = new InlineKeyboardButton { Text = TeleSettings.restartMiner, CallbackData = JsonData.Serialize(TCmdType.restartMiner) };
+//            keyboardButtons[1][1] = new InlineKeyboardButton { Text = TeleSettings.infopc, CallbackData = JsonData.Serialize(TCmdType.pc) };
+
+           
             
             HomeInlinekeyBoard =  new InlineKeyboardMarkup(keyboardButtons);
         }
+#endregion
+ #region PC Info Keyboard
+        private void InitInfoInlinekeyBoard()
+        {
+            InlineKeyboardButton[][] keyboardButtons = new InlineKeyboardButton[1][];
+            keyboardButtons[0] = new InlineKeyboardButton[2];
+            keyboardButtons[0][0] = new InlineKeyboardButton { Text = $"{TeleSettings.pcshutdown}", CallbackData = JsonData.Serialize(TCmdType.pcShutdown) };
+            keyboardButtons[0][1] = new InlineKeyboardButton { Text = $"{TeleSettings.pcrestart}", CallbackData = JsonData.Serialize(TCmdType.pcRestart)};
+
+            PcInlinekeyBoard =  new InlineKeyboardMarkup(keyboardButtons);
+        }
+#endregion
 
         private InlineKeyboardMarkup GetAlarmInlinekeyBoard(SensorsType type)
         {
@@ -230,7 +264,7 @@ namespace Rig.Telegram
             keyboardButtons[0][1] = new InlineKeyboardButton { Text = TeleSettings.ignoreAlarm, CallbackData = JsonData.Serialize(TCmdType.AlarmIgnor, type.ToString())};
             return new InlineKeyboardMarkup(keyboardButtons);
         }
-
+        #region Home Keybord
         public void InitHomeKeybord()
         {
             HomeKeyButton = new []
@@ -239,9 +273,10 @@ namespace Rig.Telegram
                     new []
                     {
                         new KeyboardButton(commands.First(i=>i.Type == TCmdType.UpdateGSheet).Name),
+                        new KeyboardButton(commands.First(i=>i.Type == TCmdType.temperature).Name),
                         new KeyboardButton(commands.First(i=>i.Type == TCmdType.runAll).Name),
                         new KeyboardButton(commands.First(i=>i.Type == TCmdType.stopAllPing).Name),
-                        new KeyboardButton(commands.First(i=>i.Type == TCmdType.StopAlarm).Name),
+                        new KeyboardButton(commands.First(i=>i.Type == TCmdType.StopAlarm).Name)
                     }
                 };
         }
@@ -257,5 +292,6 @@ namespace Rig.Telegram
             result[srvList.Count]=new KeyboardButton(TeleSettings.MyName);
             return result;
         }
+        #endregion
     }
 }

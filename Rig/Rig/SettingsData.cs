@@ -44,6 +44,8 @@ namespace Rig
         IMinerInfo CurMiner { get; set; }
         string BotId { get; set; }
         Dictionary<SensorsType, bool> SensorActivity { get; set; }
+
+        int GpuCoreMax { get; set; }
         //int PingDelay { get; set; }
     }
     class SettingsData: ISettings
@@ -61,8 +63,11 @@ namespace Rig
         private static  bool minerStatus;
         private static string botId = String.Empty;
         private static MyPage myPage ;
+        private static int _gpuCoreMax;
+
 
         //private static TimeSpan alarmDelay = TimeSpan.FromMinutes(5);
+
         private static int pingDelayMillisec = 60000;
 
         private static Dictionary<SensorsType, bool> sensorActivity = new Dictionary<SensorsType, bool>
@@ -150,6 +155,12 @@ namespace Rig
         {
             get => sensorActivity;
             set => sensorActivity = value;
+        }
+
+        public int GpuCoreMax
+        {
+            get => _gpuCoreMax;
+            set => _gpuCoreMax = value;
         }
 
         public int PingDelayMillisec

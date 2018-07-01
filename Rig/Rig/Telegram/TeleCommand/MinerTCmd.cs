@@ -7,7 +7,7 @@ namespace Rig.Telegram
     class MinerTCmd : TCommandBase, ITCommand
     {
         public MinerTCmd(ITCommandService srv) : base(srv){}
-        public override string Name => TeleSettings.Miner;
+        public override string Name => TeleSettings.miner;
         public TCmdType Type => TCmdType.miner;
         public void Execute(JsonData jd)
         {

@@ -30,14 +30,14 @@ namespace Rig
             ctrl.MinerActivityAction += OnMinerActivityAction;
         }
 
-        private void OnMinerActivityAction()
+        private async void OnMinerActivityAction()
         {
             if (ctrl.MinerStatus != IsActive)
             {
                 if (ctrl.MinerStatus)
                 {
                     RigEx.WriteLineColors("Launch miner ".AddTimeStamp(), ConsoleColor.DarkCyan);
-                    LaunchCommandLine();
+                    await ChangeAndRunMinerAction(ctrl.CurMiner.Name);
                 }
                 else
                 {
@@ -80,7 +80,7 @@ namespace Rig
         {
             if (ctrl?.CurMiner == null)
             {
-                RigEx.WriteLineColors("LaunchMiner : current miner is null".AddTimeStamp(), ConsoleColor.Red);
+                RigEx.WriteLineColors("LaunchMSI : current miner is null".AddTimeStamp(), ConsoleColor.Red);
                 return;
             }
             startInfo.CreateNoWindow = true;
@@ -107,7 +107,7 @@ namespace Rig
             }
         }
 
-        private void Start()
+        private async void Start()
         {
             try
             {
@@ -115,7 +115,7 @@ namespace Rig
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error lounch {startInfo.FileName}: {e.Message} ");
+                Console.WriteLine($"Error launch {startInfo.FileName}: {e.Message} ");
             }
             while (true)
             {
@@ -149,7 +149,6 @@ namespace Rig
                 {
                     RigEx.WriteLineColors($"Destroy miner Thread: cannot Abort Thread {e.Message}".AddTimeStamp(),
                         ConsoleColor.DarkRed);
-
                 }
 
             }
@@ -175,19 +174,33 @@ namespace Rig
         public void KillMiners()
         {
             var processes = Process.GetProcesses().Where(i => i.ProcessName.StartsWith("Nice")
+                                                              || i.ProcessName.Contains("miner")
+                                                              || i.ProcessName.Contains("Miner")
+                                                              || i.ProcessName.StartsWith("zm")
+//                                                              || i.ProcessName.EndsWith("iner64")
                                                               || i.ProcessName.StartsWith("excavator")
-                                                              || i.ProcessName.StartsWith("ccminer")
+//                                                              || i.ProcessName.StartsWith("ETC")
+//                                                              || i.ProcessName.StartsWith("ETH")
+//                                                              || i.ProcessName.StartsWith("XMR")
+//                                                              || i.ProcessName.StartsWith("Eth")
+                                                              /*|| i.ProcessName.StartsWith("sgminer")
                                                               || i.ProcessName.StartsWith("ethminer")
                                                               || i.ProcessName.StartsWith("nheqminer")
-                                                              || i.ProcessName.StartsWith("sgminer")
-                                                              || i.ProcessName.StartsWith("xmrig")
-                                                              || i.ProcessName.StartsWith("xmr")).ToArray();
+                                                              || i.ProcessName.StartsWith("NhEqMiner")
+                                                              || i.ProcessName.StartsWith("NsGpuCNMiner")
+                                                              || i.ProcessName.StartsWith("ZecMiner64")
+                                                              || i.ProcessName.StartsWith("EthDcrMiner64")
+                                                              || i.ProcessName.StartsWith("sgminer")*/
+                                                              || i.ProcessName.StartsWith("prospector")
+                                                              || i.ProcessName.Contains("Xmr")
+                                                              || i.ProcessName.Contains("xmr")).ToArray();
             if (processes != null)
             {
                 for (int i = 0; i < processes.Length; i++)
                 {
                     try
                     {
+                        RigEx.WriteLineColors($"kill process {processes[i]?.ProcessName})".AddTimeStamp(),ConsoleColor.DarkCyan);
                         processes[i]?.CloseMainWindow();
                     }
                     catch{}

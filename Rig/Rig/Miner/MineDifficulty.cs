@@ -23,7 +23,7 @@ namespace Rig
         public double BlockReward24;
         [JsonProperty(PropertyName = "last_block")]
         public long LastBlock;
-        [JsonProperty(PropertyName = "difficulty")]
+        [JsonProperty(PropertyName = "infopc")]
         public double Difficulty;
         [JsonProperty(PropertyName = "difficulty24")]
         public double Difficulty24;

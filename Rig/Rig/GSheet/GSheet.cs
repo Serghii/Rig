@@ -17,12 +17,12 @@ namespace Rig
     {
         ICtrlSheet Data { get; }
         MyPage MyPage { get; }
-        int NewVersion { get; }
+       // int NewVersion { get; }
 
     }
     public class GSheet: IGSheet
     {
-        public int NewVersion { get; private set; }
+        //public int NewVersion { get; private set; }
         private ICtrlSheet data;
         private readonly string[] ScopesSheets = {SheetsService.Scope.Spreadsheets};
 
@@ -117,6 +117,7 @@ namespace Rig
                 new GSAlarmLineCmd(this),
                 new GSStopMinerCmd(this),
                 new GSBotIdCmd(this), 
+                new GSMsiAfterburner(this), 
             };
         }
 
@@ -199,13 +200,7 @@ namespace Rig
             if (Firstline == null || !Firstline.Any())
                 return;
 
-            int newVersion;
-            if (!int.TryParse( Firstline[0][2].ToString(),out newVersion))
-            {
-               RigEx.WriteLineColors("Google Sheet => Cannot read new version on C1 ",ConsoleColor.Red);
-               return;
-            }
-            NewVersion = newVersion;
+            
 
             var range = Firstline[0][0].ToString();
             var res = GetRange(range);

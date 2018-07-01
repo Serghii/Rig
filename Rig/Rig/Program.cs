@@ -19,6 +19,7 @@ namespace Rig
             new VersionManager();
             WriteStartFile();
             RigEx.WriteLineColors($"cur version:{RigEx.MyVersion} for close prees: q".AddTimeStamp(),ConsoleColor.Gray);
+
             MainClass prog = new MainClass();
             Thread.Sleep(150);
             prog.Run();

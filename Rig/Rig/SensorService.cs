@@ -86,10 +86,12 @@ namespace Rig
 
         public void Add(string Name, HWType HwType, SensorsType Type, float Value)
         {
-            var c = sensors.FirstOrDefault(i => i.Name == Name && i.Dictionary.ContainsKey(Type) );
+            var w = Name.TrimStart('/').Split('/');
+            string sensorName = $"{w[0]}-{w[1]}";
+            var c = sensors.FirstOrDefault(i => i.Name == sensorName && i.Dictionary.ContainsKey(Type) );
             if (c == null)
             {
-                var s = new SensorR(Name, Type, HwType, Value);
+                var s = new SensorR(sensorName, Type, HwType, Value);
                 sensors.Add(s);
                 AddSensorAction(s);
                 return;

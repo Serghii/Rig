@@ -6,6 +6,7 @@ namespace Rig.Telegram.TeleCommand
 {
     class PCMenuTCmd : TCommandBase, ITCommand
     {
+        private XmrHrate HashRate = new XmrHrate();
         public PCMenuTCmd(ITCommandService srv) : base(srv){}
         public TCmdType Type => TCmdType.pcmenu;
         public void Execute(JsonData jd)
@@ -31,11 +32,19 @@ namespace Rig.Telegram.TeleCommand
             sb.Append(
                 $"{Icons.miner} :  {srv?.CurMiner?.Name}  status: {srv?.Ctrl?.MinerStatus} {(srv?.Ctrl?.MinerStatus == true ? Icons.GreenOk : Icons.RedPoint)}");
             Console.WriteLine(sb);
-            var rates = new XmrHrate().GetHashRate;
-            if (rates >0)
-            {
-                sb.Append($"\nHash Rate:\t {rates}");
-            }
+
+//            var rates = HashRate.GetHashRate;
+//            if (rates > 0)
+//            {
+//                sb.Append($"\nHash Rate:\t {rates}");
+//            }
+
+            //            var btcPrice = HashRate.GetBTCPrice;
+            //            if (btcPrice > 0)
+            //            {
+            //                sb.Append($" : {btcPrice} : {(balance > 0 ? (balance * btcPrice) : 0)}"); 
+            //            }
+
             try
             {
                 foreach (IToken token in srv.Ctrl.TelegramUser)

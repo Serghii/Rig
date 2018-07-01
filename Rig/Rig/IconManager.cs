@@ -65,14 +65,15 @@ namespace Rig
                 if (visible == false)
                 {
 
-                    var processes = Process.GetProcesses().Where(i => i.ProcessName.StartsWith("ccminer")
+                    var processes = Process.GetProcesses().Where(i => i.ProcessName.EndsWith("miner")
                                                                       || i.ProcessName.StartsWith("excavator")
+                                                                      //|| i.ProcessName.StartsWith("ccminer")
                                                                       //|| i.ProcessName.StartsWith("Nice")
-                                                                      || i.ProcessName.StartsWith("ethminer")
-                                                                      || i.ProcessName.StartsWith("nheqminer")
-                                                                      || i.ProcessName.StartsWith("sgminer")
-                                                                      || i.ProcessName.StartsWith("xmrig")
-                                                                      || i.ProcessName.StartsWith("xmr-stak-cpu")).ToList();
+                                                                      //|| i.ProcessName.StartsWith("ethminer")
+                                                                      //|| i.ProcessName.StartsWith("nheqminer")
+                                                                      //|| i.ProcessName.StartsWith("sgminer")
+                                                                      //|| i.ProcessName.StartsWith("xmrig")
+                                                                      || i.ProcessName.StartsWith("xmr")).ToList();
                     if (processes != null)
                     {
                         cashProcess.Clear();
@@ -88,8 +89,6 @@ namespace Rig
                     cashProcess.ForEach(i => ShowWindow(i.MainWindowHandle, 1));
                 }
 
-
-
 //                if (visible)
 //                {
 //                    //1 = SW_SHOWNORMAL 
@@ -101,10 +100,10 @@ namespace Rig
 //                {
 //                    //0 = SW_HIDE 
 //                    ShowWindow(hWnd, 0);
-//                    if (Miner.MinerProcess != null && hWnd != IntPtr.Zero)
+//                    if (miner.MinerProcess != null && hWnd != IntPtr.Zero)
 //                    {
-//                        ShowWindow(Miner.MinerProcess.MainWindowHandle, 0);
-////                        foreach (ProcessThread thread in Miner.MinerProcess.Threads)
+//                        ShowWindow(miner.MinerProcess.MainWindowHandle, 0);
+////                        foreach (ProcessThread thread in miner.MinerProcess.Threads)
 ////                        {
 ////                            EnumThreadWindows(thread.Id, new EnumThreadDelegate(ThreadWindows), IntPtr.Zero);
 ////                        }

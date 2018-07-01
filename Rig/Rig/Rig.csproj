@@ -196,6 +196,7 @@
     <Compile Include="DataServices\Routes.cs" />
     <Compile Include="Extention\RigEx.cs" />
     <Compile Include="GSheet\AttributesReaderCmd\AttributesReaderBaseCmd.cs" />
+    <Compile Include="GSheet\AttributesReaderCmd\GSMsiAfterburner.cs" />
     <Compile Include="GSheet\AttributesReaderCmd\GSAlarmLineCmd.cs" />
     <Compile Include="GSheet\AttributesReaderCmd\GSBotIdCmd.cs" />
     <Compile Include="GSheet\AttributesReaderCmd\GSCoinCmd.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="Miner\MineDifficulty.cs" />
     <Compile Include="Miner\Miner.cs" />
     <Compile Include="Miner\MinerListReader.cs" />
+    <Compile Include="MSIAfter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -248,11 +250,15 @@
     <Compile Include="Telegram\TeleCommand\MainKeyboardKeyTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\MainKeyboardKTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\MinerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\PcInfoTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\PCMenuTCmd.cs" />
-    <Compile Include="Telegram\TeleCommand\RestartTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\RestartMinerTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\PcRestartTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\RunAllTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\ScreenTCmd.cs" />
-    <Compile Include="Telegram\TeleCommand\ShowDifficultyTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\ShowRatesTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\PcShutDownTCmd.cs" />
+    <Compile Include="Telegram\TeleCommand\ShowTemperatureTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\StopAlarmTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\StopAllPingTCmd.cs" />
     <Compile Include="Telegram\TeleCommand\StopMinerTCmd.cs" />

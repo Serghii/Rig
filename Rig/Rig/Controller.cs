@@ -37,6 +37,11 @@ namespace Rig
         Dictionary<SensorsType, bool> SensorActivity { get; }
 
     }
+
+    public interface ICtrlMsi : ICtrlSensorServise
+    {
+        int GPUCoreMax { get; }
+    }
     public interface ICtrlAlarm : ISensorsSetings, IMiningStatus, ICtrlSensorServise
     {
         
@@ -66,8 +71,10 @@ namespace Rig
         void SetAllPingActivity(bool setActive);
         void SetPingActivityFor(string serverName, bool setActive);
         void UpdateData();
-        void RestartButton();
+        void RestartMinerButton();
         void CreateScreenShot();
+        void PCRestartButton();
+        void PCShutdownButton();
     }
 
     public interface IMiningCtrl : IMiningAction, IAlarmAction
@@ -85,6 +92,8 @@ namespace Rig
         //TimeSpan AlarmDelay { get; set; }
         //bool VersionIsLiquid(int curVersion, int newversion);
         int PingDelayMillisec { get; set; }
+
+        int GPUCoreMax { get; set; }
     }
 
     public interface ICtrlMinerList
@@ -101,7 +110,7 @@ namespace Rig
         Func<Dictionary<string, double>> GetDiffucalty { get; set; }
         IEnumerable<ICoin> GetCoins { get;}
     }
-    public class Controller : ITelegramCtrl, IMiningCtrl, ICtrlAlarm, ICtrlSheet, IDifficultyCtrl, IMinerslist
+    public class Controller : ITelegramCtrl, IMiningCtrl, ICtrlAlarm, ICtrlSheet, IDifficultyCtrl, IMinerslist, ICtrlMsi
     {
         public static readonly string ScreenPath =
             string.Format(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Screenshot.png");
@@ -132,6 +141,12 @@ namespace Rig
         {
             get => data.PingDelayMillisec;
             set => data.PingDelayMillisec = value;
+        }
+
+        public int GPUCoreMax
+        {
+            get => data.GpuCoreMax;
+            set => data.GpuCoreMax = value;
         }
 
         public Controller(ISettings data)
@@ -261,14 +276,28 @@ namespace Rig
             UpdateDataAction();
         }
 
-        public void RestartButton()
+        public void RestartMinerButton()
         {
             RigEx.WriteLineColors("QUIT".AddTimeStamp(),ConsoleColor.Yellow);
             RunApplication();
             RigEx.QuitApp(500);
         }
+        public void PCRestartButton()
+        {
+            RigEx.WriteLineColors("RestaRT".AddTimeStamp(),ConsoleColor.Yellow);
+            SendMsg("Restart PC");
+            Process.Start("shutdown.exe", "-r -t 5");
+            RigEx.QuitApp(500);
+        }
+        public void PCShutdownButton()
+        {
+            RigEx.WriteLineColors("Shutdown".AddTimeStamp(),ConsoleColor.Yellow);
+            SendMsg("Shutdown PC");
+            Process.Start("shutdown.exe", "-s -t 5");
+            RigEx.QuitApp(500);
+        }
 
-        public ISensors GetSensors => data.GetSensors;
+       public ISensors GetSensors => data.GetSensors;
         public IEnumerable<IAlarmSettings> GetAlarmSettings => data.GetAlarmSetings;
 
         public IEnumerable<IAlarmSettings> GetStopSettings => data.GetStopSettings;
